@@ -1,7 +1,19 @@
 #!/usr/bin/python3
 """class for file storage"""
 import json
-from models.base_model import BaseModel
+from os.path import exists
+from models import base_model, user, place, state, city, amenity, review
+
+
+BaseModel = base_model.BaseModel
+User = user.User
+Place = place.Place
+State = state.State
+City = city.City
+Amenity = amenity.Amenity
+Review = review.Review
+name_class = ["BaseModel", "City", "State",
+              "Place", "Amenity", "Review", "User"]
 
 
 class FileStorage:
@@ -29,15 +41,19 @@ class FileStorage:
         objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
         with open(FileStorage.__file_path, "w") as f:
             json.dump(objdict, f)
- 
+
     def reload(self):
-        """Deserialize the JSON file __file_path to __objects, if it exists."""
-        try:
-            with open(FileStorage.__file_path) as f:
-                objdict = json.load(f)
-            for o in objdict.values():
-                cls_name = o["__class__"]
-                del o["__class__"]
-                self.new(eval(cls_name)(**o))
-        except FileNotFoundError:
-            return
+        """ if (__file_path) exists deserializes JSON file to __objects
+            elif , do nothing. If the file not exist,
+        """
+        dic_obj = {}
+        FileStorage.__objects = {}
+        if (exists(FileStorage.__file_path)):
+            with open(FileStorage.__file_path, "r") as fil:
+                dic_obj = json.load(fil)
+                for key, value in dic_obj.items():
+                    class_nam = key.split(".")[0]
+                    if class_nam in name_class:
+                        FileStorage.__objects[key] = eval(class_nam)(**value)
+                    else:
+                        pass

@@ -18,9 +18,11 @@ class BaseModel:
                 if key == '__class__':
                     pass
                 elif key == "created_at":
-                    self.created_at = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
+                    self.created_at = datetime.strptime(val,
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
                 elif key == "updated_at":
-                    self.updated_at = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
+                    self.updated_at = datetime.strptime(val,
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
                 else:
                     self.__setattr__(key, val)
         else:
@@ -28,7 +30,6 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
-        
 
     def save(self):
         """save and update method"""
@@ -37,12 +38,16 @@ class BaseModel:
 
     def to_dict(self):
         """dictionary representaton of objects"""
-        dict = self.__dict__
-        dict["updated_at"] = dict["updated_at"].isoformat("T", 'milliseconds')
-        dict["created_at"] = dict["created_at"].isoformat("T", 'milliseconds')
+        dict = {}
+        for key, val in self.__dict__.items():
+            if key in ['created_at', 'updated_at']:
+                dict[key] = val
+        dict["updated_at"] = self.updated_at.isoformat()
+        dict["created_at"] = self.created_at.isoformat()
         dict["__class__"] = self.__class__.__name__
         return dict
 
     def __str__(self):
         """string representation"""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return("[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, self.__dict__))
