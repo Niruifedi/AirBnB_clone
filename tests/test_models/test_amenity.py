@@ -1,33 +1,25 @@
 #!/usr/bin/python3
-""" Tests Amenity """
-
-import unittest
+"""
+Test suits for amenities
+"""
 import os
-import pep8
-import datetime
-from models import amenity
-Amenity = amenity.Amenity
+import models
+import unittest
+from datetime import datetime
+from models.base_model import BaseModel
 
-class Test_Amenity(unittest.TestCase):
-    """ Tests amenity """
 
-    def test_pep8(self):
-        """ Tests the pep8 """
-        pep8style = pep8.StyleGuide(quiet=True)
-        result = pep8style.check_files(['models/amenity.py'])
-        self.assertEqual(result.total_errors, 0, "Check pep8")
+class TestAmenity(unittest.TestCase):
+    """
+    Tests for amenities
+    """
 
-    def test_Amenity_dict(self):
-        """Amenity_dict"""
-        self.assertTrue('id' in self.amenity.__dict__)
-        self.assertTrue('created_at' in self.amenity.__dict__)
-        self.assertTrue('updated_at' in self.amenity.__dict__)
-        self.assertTrue('name' in self.amenity.__dict__)
-   
-    def test_save_Amenity(self):
-        """Amenity save"""
-        self.amenity.save()
-        self.assertNotEqual(self.amenity.created_at, self.amenity.updated_at)
+    def test_name(self):
+        """
+        Tests for name inputs
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
